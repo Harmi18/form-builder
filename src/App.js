@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+/* eslint-disable */
 const data = [
   {
     name: "Input",
@@ -53,6 +54,11 @@ const dragElement = [];
 function App() {
   const [items, setItems] = useState([]);
   const [items1, setItems1] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  // const [labelOfField, setLabel] = useState("");
+  const [nameOfField, setName] = useState("");
+  // const [placeholderOfField, setPlaceholder] = useState("");
+
   useEffect(() => {
     setItems(data);
     setItems1(dat1a);
@@ -66,11 +72,27 @@ function App() {
 
     const reOrderedItems = reOrder(
       items,
+
       result.source.index,
       result.destination.index
     );
-    console.log(reOrder);
+
     setItems(reOrderedItems);
+  };
+  const handleModal = () => {
+    setOpenModal(false);
+  };
+  const handleOpenModal = (id) => {
+    setOpenModal(id);
+  };
+
+  const saveData = () => {
+    console.log(nameOfField);
+    items1.find((el) => {
+      if (el.id === items1.id) {
+        items.name = nameOfField;
+      }
+    });
   };
   return (
     <main>
@@ -114,9 +136,63 @@ function App() {
                         {(provided, snapshot) => (
                           <div
                             ref={provided.innerRef}
-                            {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
+                            <span
+                              onClick={() =>
+                                handleOpenModal(`${item.id}${index}`)
+                              }
+                            >
+                              {item.name}
+                            </span>
+                            {openModal === `${item.id}${index}` ? (
+                              <div className="modal-body">
+                                {/* Label
+                                <input
+                                  type="text"
+                                  id={item.id}
+                                  onChange={(event) =>
+                                    setLabel(event.target.value)
+                                  }
+                                  value={labelOfField}
+                                />
+                                <br />
+                                Placeholder
+                                <input
+                                  type="text"
+                                  id={placeholderOfField}
+                                  onChange={(event) =>
+                                    setPlaceholder(event.target.value)
+                                  }
+                                  value={placeholderOfField}
+                                />
+                                <br /> */}
+                                Name
+                                <input
+                                  type="text"
+                                  id={nameOfField}
+                                  onChange={(event) =>
+                                    setName(event.target.value)
+                                  }
+                                  value={nameOfField}
+                                />
+                                <br />
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  onClick={saveData}
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  onClick={handleModal}
+                                >
+                                  Close
+                                </button>
+                              </div>
+                            ) : null}
                             {item.content}
                           </div>
                         )}
